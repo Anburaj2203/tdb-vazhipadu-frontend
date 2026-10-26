@@ -31,11 +31,9 @@ Vite prints the local URL (http://localhost:5173 by default). Routes:
 
 | Route        | What it does                                                         |
 | ------------ | -------------------------------------------------------------------- |
-| `/`          | Landing page                                                          |
 | `/offerings` | Pick a temple, browse and search its offerings, add them to the cart  |
 | `/cart`      | Review cart lines, fill in the devotee details, place the order       |
 | `/orders`    | Staff view: search, filter, sort, paginate and cancel orders          |
-| `/about`     | About the app                                                         |
 
 Production build and local preview of that build:
 
@@ -119,6 +117,3 @@ One problem, one issue, one branch, one PR into `main`.
 | 4 | Temple staff can look up, filter and cancel orders           | [#4](https://github.com/Anburaj2203/tdb-vazhipadu-frontend/issues/4) | [#12](https://github.com/Anburaj2203/tdb-vazhipadu-frontend/pull/12) |
 | 5 | The booking flow works on a small phone, by keyboard and with a screen reader | [#5](https://github.com/Anburaj2203/tdb-vazhipadu-frontend/issues/5) | [#15](https://github.com/Anburaj2203/tdb-vazhipadu-frontend/pull/15) |
 
-Groundwork that came before the five problems:
-[#7](https://github.com/Anburaj2203/tdb-vazhipadu-frontend/pull/7) (app shell and a green test
-baseline) and [#9](https://github.com/Anburaj2203/tdb-vazhipadu-frontend/pull/9) (the mock API).
