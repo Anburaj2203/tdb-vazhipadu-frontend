@@ -1,4 +1,4 @@
-import { screen } from '@testing-library/react'
+import { screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import App from '@/App'
 import { renderWithRouter } from '@/test/renderWithRouter'
@@ -34,12 +34,15 @@ describe('Layout keyboard access', () => {
     const user = userEvent.setup()
     renderWithRouter(<App />)
 
-    await user.tab()
-    await user.tab()
-    expect(screen.getByRole('link', { name: 'Home' })).toHaveFocus()
+    const navLinks = within(screen.getByRole('navigation', { name: 'Main' })).getAllByRole('link')
+    expect(navLinks.length).toBeGreaterThan(1)
 
     await user.tab()
-    expect(screen.getByRole('link', { name: 'About' })).toHaveFocus()
+
+    for (const link of navLinks) {
+      await user.tab()
+      expect(link).toHaveFocus()
+    }
   })
 
   it('keeps the skip link reachable but out of the visual flow until focused', () => {

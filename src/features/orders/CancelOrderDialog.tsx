@@ -59,7 +59,7 @@ function CancelOrderDialog({ order, onConfirm, onDismiss, isCancelling }: Cancel
             type="button"
             onClick={onConfirm}
             disabled={isCancelling}
-            className="rounded bg-brand px-4 py-2 text-sm font-semibold text-white hover:bg-brand-muted disabled:opacity-50"
+            className="rounded bg-brand px-4 py-2 text-sm font-semibold text-white hover:bg-brand-hover disabled:opacity-50"
           >
             {isCancelling ? 'Cancelling…' : 'Cancel order'}
           </button>

@@ -84,7 +84,7 @@ function OrderFilters({ filters, onChange, onClear }: OrderFiltersProps) {
           </label>
           <button
             type="submit"
-            className="rounded bg-brand px-4 py-2 text-sm font-semibold text-white hover:bg-brand-muted"
+            className="rounded bg-brand px-4 py-2 text-sm font-semibold text-white hover:bg-brand-hover"
           >
             Search
           </button>
