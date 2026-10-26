@@ -13,7 +13,13 @@ type OrderFormProps = {
 }
 
 const FALLBACK_SUBMIT_ERROR = 'The order could not be sent. Please try again.'
-const fieldClass = 'rounded-md border border-slate-300 bg-white px-3 py-2 text-slate-900'
+const FIELD_ORDER: readonly (keyof OrderFormValues)[] = [
+  'devoteeName',
+  'devoteePhone',
+  'birthStar',
+  'offeringDate',
+] as const
+const fieldClass = 'rounded-md border border-line-strong bg-white px-3 py-2 text-slate-900'
 const errorClass = 'text-sm text-rose-700'
 
 function OrderForm({ onPlaced }: OrderFormProps) {
@@ -26,6 +32,12 @@ function OrderForm({ onPlaced }: OrderFormProps) {
   const phoneId = useId()
   const birthStarId = useId()
   const dateId = useId()
+  const fieldIds: Record<keyof OrderFormValues, string> = {
+    devoteeName: nameId,
+    devoteePhone: phoneId,
+    birthStar: birthStarId,
+    offeringDate: dateId,
+  }
 
   useEffect(() => {
     mounted.current = true
@@ -48,6 +60,12 @@ function OrderForm({ onPlaced }: OrderFormProps) {
 
     const nextErrors = validateOrderForm(values)
     setErrors(nextErrors)
+
+    const firstInvalidField = FIELD_ORDER.find((field) => nextErrors[field])
+
+    if (firstInvalidField) {
+      document.getElementById(fieldIds[firstInvalidField])?.focus()
+    }
 
     if (Object.keys(nextErrors).length > 0 || spansTemples || isSubmitting) {
       return

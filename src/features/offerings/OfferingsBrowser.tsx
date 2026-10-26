@@ -56,7 +56,7 @@ function OfferingsBrowser() {
           id={templeFieldId}
           value={selectedTempleId}
           onChange={(event) => setChosenTempleId(event.target.value)}
-          className="rounded-md border border-slate-300 bg-white px-3 py-2 text-slate-900"
+          className="rounded-md border border-line-strong bg-white px-3 py-2 text-slate-900"
         >
           {temples.map((temple) => (
             <option key={temple.id} value={temple.id}>

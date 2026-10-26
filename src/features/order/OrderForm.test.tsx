@@ -152,4 +152,28 @@ describe('OrderForm', () => {
     expect(await screen.findByRole('alert')).toBeInTheDocument()
     expect(screen.getByLabelText('Name')).toHaveValue('Lakshmi Iyer')
   })
+
+  it('moves focus to the first field that failed validation', async () => {
+    const user = userEvent.setup()
+    renderWithRouter(<Cart />, '/cart')
+
+    await user.click(screen.getByRole('button', { name: 'Place the order' }))
+
+    const nameField = screen.getByLabelText('Name')
+
+    expect(nameField).toHaveFocus()
+    expect(nameField).toHaveAttribute('aria-invalid', 'true')
+    expect(nameField).toHaveAccessibleDescription(expect.stringMatching(/.+/))
+  })
+
+  it('moves focus past the fields that are already valid', async () => {
+    const user = userEvent.setup()
+    renderWithRouter(<Cart />, '/cart')
+
+    await user.type(screen.getByLabelText('Name'), 'Lakshmi Iyer')
+    await user.type(screen.getByLabelText('Phone number'), '9876543210')
+    await user.click(screen.getByRole('button', { name: 'Place the order' }))
+
+    expect(screen.getByLabelText('Birth star')).toHaveFocus()
+  })
 })

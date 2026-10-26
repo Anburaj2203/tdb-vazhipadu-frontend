@@ -50,7 +50,7 @@ function CancelOrderDialog({ order, onConfirm, onDismiss, isCancelling }: Cancel
             type="button"
             onClick={onDismiss}
             disabled={isCancelling}
-            className="rounded border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 hover:border-brand hover:text-brand disabled:opacity-50"
+            className="rounded border border-line-strong px-4 py-2 text-sm font-medium text-slate-700 hover:border-brand hover:text-brand disabled:opacity-50"
           >
             Keep order
           </button>

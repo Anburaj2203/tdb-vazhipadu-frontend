@@ -29,7 +29,7 @@ function CartLines() {
                   step={1}
                   value={line.quantity}
                   onChange={(event) => setQuantity(line.offeringId, event.target.valueAsNumber)}
-                  className="w-20 rounded-md border border-slate-300 bg-white px-2 py-1 text-slate-900"
+                  className="w-20 rounded-md border border-line-strong bg-white px-2 py-1 text-slate-900"
                 />
               </div>
               <p className="w-24 text-right font-semibold text-slate-900">
@@ -39,7 +39,7 @@ function CartLines() {
                 type="button"
                 aria-label={`Remove ${line.name}`}
                 onClick={() => removeOffering(line.offeringId)}
-                className="rounded-md border border-slate-300 px-3 py-1 text-sm text-slate-700 hover:bg-slate-100"
+                className="rounded-md border border-line-strong px-3 py-1 text-sm text-slate-700 hover:bg-slate-100"
               >
                 Remove
               </button>
