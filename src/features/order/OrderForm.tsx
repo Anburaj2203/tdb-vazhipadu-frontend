@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useId, useRef, useState } from 'react'
+import { flushSync } from 'react-dom'
 import { createOrder, isApiError, NAKSHATRAS, todayIsoDate } from '@/api'
 import type { Order } from '@/api'
 import { cartTempleIds } from '@/features/cart/cartTotal'
@@ -15,7 +16,13 @@ type OrderFormProps = {
 
 const SUBMIT_FAILED = 'Your order did not go through.'
 const FALLBACK_SUBMIT_REASON = 'Please try again.'
-const fieldClass = 'rounded-md border border-slate-300 bg-white px-3 py-2 text-slate-900'
+const FIELD_ORDER: readonly (keyof OrderFormValues)[] = [
+  'devoteeName',
+  'devoteePhone',
+  'birthStar',
+  'offeringDate',
+] as const
+const fieldClass = 'rounded-md border border-line-strong bg-surface-raised px-3 py-2 text-ink'
 const errorClass = 'text-sm text-rose-700'
 const sendingClass = 'text-sm text-slate-700'
 
@@ -30,6 +37,12 @@ function OrderForm({ onPlaced }: OrderFormProps) {
   const phoneId = useId()
   const birthStarId = useId()
   const dateId = useId()
+  const fieldIds: Record<keyof OrderFormValues, string> = {
+    devoteeName: nameId,
+    devoteePhone: phoneId,
+    birthStar: birthStarId,
+    offeringDate: dateId,
+  }
 
   useEffect(() => {
     mounted.current = true
@@ -55,7 +68,13 @@ function OrderForm({ onPlaced }: OrderFormProps) {
     }
 
     const nextErrors = validateOrderForm(values)
-    setErrors(nextErrors)
+    flushSync(() => setErrors(nextErrors))
+
+    const firstInvalidField = FIELD_ORDER.find((field) => nextErrors[field])
+
+    if (firstInvalidField) {
+      document.getElementById(fieldIds[firstInvalidField])?.focus()
+    }
 
     if (Object.keys(nextErrors).length > 0 || spansTemples) {
       return

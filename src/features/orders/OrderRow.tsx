@@ -45,7 +45,7 @@ function OrderRow({ order, onCancel, isCancelling }: OrderRowProps) {
             type="button"
             disabled={isCancelling}
             onClick={() => onCancel(order)}
-            className="rounded border border-slate-300 px-3 py-1 text-sm font-medium text-slate-700 hover:border-brand hover:text-brand disabled:opacity-50"
+            className="rounded border border-line-strong px-3 py-1 text-sm font-medium text-slate-700 hover:border-brand hover:text-brand disabled:opacity-50"
           >
             {isCancelling ? 'Cancelling…' : 'Cancel'}
           </button>

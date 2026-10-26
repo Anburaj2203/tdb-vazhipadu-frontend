@@ -9,7 +9,7 @@ type OrderFiltersProps = {
 }
 
 const fieldClass =
-  'rounded border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:border-brand focus:outline-none'
+  'rounded border border-line-strong bg-white px-3 py-2 text-sm text-slate-900 focus:border-brand'
 const labelClass = 'flex flex-col gap-1 text-sm font-medium text-slate-700'
 
 function OrderFilters({ filters, onChange, onClear }: OrderFiltersProps) {
@@ -84,7 +84,7 @@ function OrderFilters({ filters, onChange, onClear }: OrderFiltersProps) {
           </label>
           <button
             type="submit"
-            className="rounded bg-brand px-4 py-2 text-sm font-semibold text-white hover:bg-brand-muted"
+            className="rounded bg-brand px-4 py-2 text-sm font-semibold text-white hover:bg-brand-hover"
           >
             Search
           </button>
@@ -93,7 +93,7 @@ function OrderFilters({ filters, onChange, onClear }: OrderFiltersProps) {
           <button
             type="button"
             onClick={onClear}
-            className="rounded border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 hover:border-brand hover:text-brand"
+            className="rounded border border-line-strong px-4 py-2 text-sm font-medium text-slate-700 hover:border-brand hover:text-brand"
           >
             Clear filters
           </button>

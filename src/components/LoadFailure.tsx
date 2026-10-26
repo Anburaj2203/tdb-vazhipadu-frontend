@@ -10,7 +10,7 @@ function LoadFailure({ message, onRetry }: LoadFailureProps) {
       <button
         type="button"
         onClick={onRetry}
-        className="mt-3 rounded-md bg-brand px-3 py-1.5 text-sm font-semibold text-white hover:bg-brand-muted"
+        className="mt-3 rounded-md bg-brand px-3 py-1.5 text-sm font-semibold text-white hover:bg-brand-hover"
       >
         Try again
       </button>

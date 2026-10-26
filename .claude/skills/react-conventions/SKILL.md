@@ -39,6 +39,10 @@ held to. Keep it free of counts, versions, issue numbers, file inventories and d
 
 - **Scope**: `src/` — every TypeScript source file in the app, plus `index.html`, `vite.config.ts`
   and the ESLint and TypeScript configs when a change touches them.
+- **Minimum supported width**: 360 CSS pixels. Every page works at that width without a sideways
+  scroll, and still works at desktop width.
+- **Contrast minimums**: 4.5:1 for text, 3:1 for interactive boundaries and the focus ring, measured
+  against the background the element actually sits on.
 
 **Architecture rules**:
 
@@ -77,11 +81,36 @@ held to. Keep it free of counts, versions, issue numbers, file inventories and d
 - Tests use Vitest and React Testing Library and assert what a user can observe — what renders, and
   what a click or an input produces — not internal calls or state shape.
 - Queries are by role, label or text. A `data-testid` is a last resort, not the default.
+- A form field is found by its visible label. A test that cannot find a field that way has found
+  a missing label, not a reason to reach for a test id.
 - The network is mocked at the boundary; the app's own hooks and components are not mocked.
 - A change keeps the configured coverage thresholds green.
 - A bug fix ships with a test that fails without the fix.
 - Production code is never bent to make a test pass, and a failing test is never weakened, skipped or
   deleted to go green.
+
+**Accessibility rules**:
+
+- Every interactive control is a real control. A `button`, `a`, `input` or `select` carries keyboard
+  behaviour and a role for free; a `div` given an `onClick` carries neither and has to reimplement
+  both to be equivalent.
+- Every control has an accessible name that a screen reader announces. A form field is named by a
+  `label` tied to it, not by a placeholder, adjacent text or a title attribute.
+- A field that fails validation is tied to its message with `aria-describedby` and marked
+  `aria-invalid`, and the message says what is wrong. Red text alone announces nothing. The field
+  keeps its label while the error shows.
+- A change in status that is not announced by a focus move — a load finishing, an item reaching the
+  cart, a submission failing — is published through a live region so it reaches a screen reader.
+- Focus is never hidden. The focus-visible treatment in the theme is not removed or overridden with
+  `outline: none`, and focus order follows reading order.
+- Focus is managed across a route change, a dialog opening and a dialog closing; a dialog traps focus
+  while it is open and returns it to the control that opened it.
+- Colours come from the theme tokens, which are contrast-tested. A colour chosen outside them is
+  untested, and colour is never the only thing carrying a meaning.
+- An icon-only control carries a text name; decorative imagery is `alt=""` and hidden from the
+  accessibility tree.
+- Every page reachable in the flow works at the minimum supported width without a sideways scroll,
+  and works with the keyboard alone.
 
 **Blocking in review**:
 
@@ -104,6 +133,17 @@ held to. Keep it free of counts, versions, issue numbers, file inventories and d
 - `dangerouslySetInnerHTML` fed anything that is not sanitised.
 - An interactive element that is a `div` with an `onClick` and no role, keyboard handler or
   accessible name; an `<img>` without `alt`; a form control without a label.
+- A form control whose only name is a placeholder, a title or neighbouring text.
+- A validation message not tied to its field with `aria-describedby`, or an invalid field without
+  `aria-invalid`.
+- `outline: none`, `outline: 0` or a removed focus ring on a focusable element with nothing visible
+  put in its place.
+- A positive `tabIndex`, or `autoFocus` on a page load.
+- A hardcoded colour where a theme token exists, or a new colour added to the theme without the
+  contrast test covering it.
+- A control reachable by mouse but not by keyboard, or a keyboard trap outside a dialog.
+- A layout that forces a sideways scroll at the minimum supported width.
+- A test that finds a form field by test id, placeholder or DOM position where a visible label exists.
 - A gate command that does not pass.
 
 **Definition of done**:

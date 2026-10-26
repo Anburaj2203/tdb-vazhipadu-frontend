@@ -6,7 +6,7 @@ type OrdersPaginationProps = {
 }
 
 const buttonClass =
-  'rounded border border-slate-300 px-3 py-2 text-sm font-medium text-slate-700 hover:border-brand hover:text-brand disabled:opacity-40 disabled:hover:border-slate-300 disabled:hover:text-slate-700'
+  'rounded border border-line-strong px-3 py-2 text-sm font-medium text-slate-700 hover:border-brand hover:text-brand disabled:opacity-40 disabled:hover:border-line-strong disabled:hover:text-slate-700'
 
 function OrdersPagination({ page, totalPages, total, onPageChange }: OrdersPaginationProps) {
   return (

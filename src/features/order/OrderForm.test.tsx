@@ -255,4 +255,51 @@ describe('OrderForm', () => {
     expect(await screen.findByText(/has been sent to the temple/i)).toBeInTheDocument()
     expect(await ordersFromThisDevotee()).toBe(1)
   })
+
+  it('moves focus to the first field that failed validation', async () => {
+    const user = userEvent.setup()
+    renderWithRouter(<Cart />, '/cart')
+
+    await user.click(screen.getByRole('button', { name: 'Place the order' }))
+
+    const nameField = screen.getByLabelText('Name')
+
+    expect(nameField).toHaveFocus()
+    expect(nameField).toHaveAttribute('aria-invalid', 'true')
+    expect(nameField).toHaveAccessibleDescription(expect.stringMatching(/.+/))
+  })
+
+  it('moves focus past the fields that are already valid', async () => {
+    const user = userEvent.setup()
+    renderWithRouter(<Cart />, '/cart')
+
+    await user.type(screen.getByLabelText('Name'), 'Lakshmi Iyer')
+    await user.type(screen.getByLabelText('Phone number'), '9876543210')
+    await user.click(screen.getByRole('button', { name: 'Place the order' }))
+
+    expect(screen.getByLabelText('Birth star')).toHaveFocus()
+  })
+
+  it('has the error wiring in place on the field at the moment focus arrives', async () => {
+    const user = userEvent.setup()
+    renderWithRouter(<Cart />, '/cart')
+
+    const seenOnFocus: { invalid: string | null; describedBy: string | null }[] = []
+    const record = (event: FocusEvent) => {
+      const target = event.target as HTMLElement
+      seenOnFocus.push({
+        invalid: target.getAttribute('aria-invalid'),
+        describedBy: target.getAttribute('aria-describedby'),
+      })
+    }
+
+    document.addEventListener('focusin', record)
+    await user.click(screen.getByRole('button', { name: 'Place the order' }))
+    document.removeEventListener('focusin', record)
+
+    expect(seenOnFocus.at(-1)).toEqual({
+      invalid: 'true',
+      describedBy: expect.stringContaining('-error'),
+    })
+  })
 })
