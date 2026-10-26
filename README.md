@@ -117,7 +117,7 @@ One problem, one issue, one branch, one PR into `main`.
 | 2 | Devotees can build an offering cart and submit an order      | [#2](https://github.com/Anburaj2203/tdb-vazhipadu-frontend/issues/2) | [#13](https://github.com/Anburaj2203/tdb-vazhipadu-frontend/pull/13) |
 | 3 | Devotees get one confirmed order, and keep their work when it fails | [#3](https://github.com/Anburaj2203/tdb-vazhipadu-frontend/issues/3) | [#14](https://github.com/Anburaj2203/tdb-vazhipadu-frontend/pull/14) |
 | 4 | Temple staff can look up, filter and cancel orders           | [#4](https://github.com/Anburaj2203/tdb-vazhipadu-frontend/issues/4) | [#12](https://github.com/Anburaj2203/tdb-vazhipadu-frontend/pull/12) |
-| 5 | The booking flow works on a small phone, by keyboard and with a screen reader | [#5](https://github.com/Anburaj2203/tdb-vazhipadu-frontend/issues/5) | _in progress — link to be added_ |
+| 5 | The booking flow works on a small phone, by keyboard and with a screen reader | [#5](https://github.com/Anburaj2203/tdb-vazhipadu-frontend/issues/5) | [#15](https://github.com/Anburaj2203/tdb-vazhipadu-frontend/pull/15) |
 
 Groundwork that came before the five problems:
 [#7](https://github.com/Anburaj2203/tdb-vazhipadu-frontend/pull/7) (app shell and a green test
