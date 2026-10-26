@@ -1,5 +1,5 @@
 import type { Offering } from '@/api'
-import { formatPrice } from '@/features/offerings/formatPrice'
+import { formatPrice } from '@/lib/formatPrice'
 
 type OfferingCardProps = {
   offering: Offering
