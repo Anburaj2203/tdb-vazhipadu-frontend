@@ -1,12 +1,12 @@
 import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { configureMockApi, resetDatabase, resetMockApiConfig } from '@/api'
+import { configureMockApi, getTemples, resetDatabase, resetMockApiConfig } from '@/api'
 import TempleOfferings from '@/features/offerings/TempleOfferings'
 
 const TEMPLE_NAME = 'Sree Padmanabhaswamy Temple'
 
-function keralaTempleId(): string {
-  const temple = resetDatabase().temples.find((candidate) => candidate.name === TEMPLE_NAME)
+async function keralaTempleId(): Promise<string> {
+  const temple = (await getTemples()).find((candidate) => candidate.name === TEMPLE_NAME)
 
   if (!temple) {
     throw new Error(`The seed data no longer contains "${TEMPLE_NAME}".`)
@@ -18,10 +18,11 @@ function keralaTempleId(): string {
 describe('TempleOfferings', () => {
   let templeId = ''
 
-  beforeEach(() => {
+  beforeEach(async () => {
     resetMockApiConfig()
-    templeId = keralaTempleId()
+    resetDatabase()
     configureMockApi({ minLatencyMs: 0, maxLatencyMs: 0, failureRate: 0 })
+    templeId = await keralaTempleId()
   })
 
   afterEach(() => {
