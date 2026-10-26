@@ -6,6 +6,7 @@ import Cart from '@/routes/Cart'
 import Home from '@/routes/Home'
 import NotFound from '@/routes/NotFound'
 import Offerings from '@/routes/Offerings'
+import Orders from '@/routes/Orders'
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
           <Route index element={<Home />} />
           <Route path="offerings" element={<Offerings />} />
           <Route path="cart" element={<Cart />} />
+          <Route path="orders" element={<Orders />} />
           <Route path="about" element={<About />} />
           <Route path="*" element={<NotFound />} />
         </Route>

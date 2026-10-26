@@ -1,10 +1,10 @@
 import { useCallback, useId, useState } from 'react'
 import { getTemples } from '@/api'
 import type { Offering } from '@/api'
+import LoadFailure from '@/components/LoadFailure'
 import { useCart } from '@/features/cart/useCart'
-import LoadFailure from '@/features/offerings/LoadFailure'
 import TempleOfferings from '@/features/offerings/TempleOfferings'
-import { useAsyncResource } from '@/features/offerings/useAsyncResource'
+import { useAsyncResource } from '@/lib/useAsyncResource'
 
 function OfferingsBrowser() {
   const [chosenTempleId, setChosenTempleId] = useState('')

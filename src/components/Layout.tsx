@@ -19,6 +19,9 @@ function Layout() {
           <NavLink to="/cart" className={linkClass}>
             Cart
           </NavLink>
+          <NavLink to="/orders" className={linkClass}>
+            Orders
+          </NavLink>
           <NavLink to="/about" className={linkClass}>
             About
           </NavLink>
