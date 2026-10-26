@@ -1,12 +1,14 @@
 import { useState } from 'react'
 import { Link } from 'react-router'
+import type { Order } from '@/api'
 import CartLines from '@/features/cart/CartLines'
 import { useCart } from '@/features/cart/useCart'
 import OrderForm from '@/features/order/OrderForm'
+import { formatPrice } from '@/lib/formatPrice'
 
 function Cart() {
   const { lines } = useCart()
-  const [placedOrderId, setPlacedOrderId] = useState('')
+  const [placedOrder, setPlacedOrder] = useState<Order | null>(null)
 
   return (
     <section className="flex flex-col gap-6">
@@ -16,15 +18,18 @@ function Cart() {
           Check the offerings you have chosen, then tell the temple who the offering is for.
         </p>
       </div>
-      {placedOrderId ? (
-        <p
+      {placedOrder ? (
+        <div
           role="status"
           className="rounded-lg border border-emerald-200 bg-emerald-50 p-4 text-emerald-900"
         >
-          Your order {placedOrderId} has been sent to the temple.
-        </p>
+          <p>Your order {placedOrder.id} has been sent to the temple.</p>
+          <p className="mt-1">
+            Total {formatPrice(placedOrder.total)}. Quote the order number at the temple.
+          </p>
+        </div>
       ) : null}
-      {!placedOrderId && lines.length === 0 ? (
+      {!placedOrder && lines.length === 0 ? (
         <p className="text-slate-600">
           Your cart is empty.{' '}
           <Link to="/offerings" className="text-brand underline">
@@ -36,7 +41,7 @@ function Cart() {
       {lines.length > 0 ? (
         <>
           <CartLines />
-          <OrderForm onPlaced={setPlacedOrderId} />
+          <OrderForm onPlaced={setPlacedOrder} />
         </>
       ) : null}
     </section>
