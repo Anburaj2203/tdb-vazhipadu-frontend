@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useId, useRef, useState } from 'react'
 import { createOrder, isApiError, NAKSHATRAS, todayIsoDate } from '@/api'
+import type { Order } from '@/api'
 import { cartTempleIds } from '@/features/cart/cartTotal'
 import { useCart } from '@/features/cart/useCart'
 import { EMPTY_ORDER_FORM } from '@/features/order/orderFormValues'
@@ -9,18 +10,21 @@ import { validateOrderForm } from '@/features/order/validateOrderForm'
 type SubmitState = { status: 'idle' } | { status: 'submitting' } | { status: 'failed'; message: string }
 
 type OrderFormProps = {
-  onPlaced: (orderId: string) => void
+  onPlaced: (order: Order) => void
 }
 
-const FALLBACK_SUBMIT_ERROR = 'The order could not be sent. Please try again.'
+const SUBMIT_FAILED = 'Your order did not go through.'
+const FALLBACK_SUBMIT_REASON = 'Please try again.'
 const fieldClass = 'rounded-md border border-slate-300 bg-white px-3 py-2 text-slate-900'
 const errorClass = 'text-sm text-rose-700'
+const sendingClass = 'text-sm text-slate-700'
 
 function OrderForm({ onPlaced }: OrderFormProps) {
   const { lines, clearCart } = useCart()
   const [values, setValues] = useState<OrderFormValues>(EMPTY_ORDER_FORM)
   const [errors, setErrors] = useState<OrderFieldErrors>({})
   const [submitState, setSubmitState] = useState<SubmitState>({ status: 'idle' })
+  const inFlight = useRef(false)
   const mounted = useRef(true)
   const nameId = useId()
   const phoneId = useId()
@@ -46,13 +50,18 @@ function OrderForm({ onPlaced }: OrderFormProps) {
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
 
-    const nextErrors = validateOrderForm(values)
-    setErrors(nextErrors)
-
-    if (Object.keys(nextErrors).length > 0 || spansTemples || isSubmitting) {
+    if (inFlight.current) {
       return
     }
 
+    const nextErrors = validateOrderForm(values)
+    setErrors(nextErrors)
+
+    if (Object.keys(nextErrors).length > 0 || spansTemples) {
+      return
+    }
+
+    inFlight.current = true
     setSubmitState({ status: 'submitting' })
 
     try {
@@ -71,17 +80,18 @@ function OrderForm({ onPlaced }: OrderFormProps) {
 
       setValues(EMPTY_ORDER_FORM)
       setSubmitState({ status: 'idle' })
-      onPlaced(order.id)
+      onPlaced(order)
       clearCart()
     } catch (error: unknown) {
       if (!mounted.current) {
         return
       }
 
-      setSubmitState({
-        status: 'failed',
-        message: isApiError(error) ? error.message : FALLBACK_SUBMIT_ERROR,
-      })
+      const reason = isApiError(error) ? error.message : FALLBACK_SUBMIT_REASON
+
+      setSubmitState({ status: 'failed', message: `${SUBMIT_FAILED} ${reason}` })
+    } finally {
+      inFlight.current = false
     }
   }
 
@@ -179,6 +189,12 @@ function OrderForm({ onPlaced }: OrderFormProps) {
       {spansTemples ? (
         <p role="alert" className={errorClass}>
           Your cart holds offerings from more than one temple. Keep one temple per order.
+        </p>
+      ) : null}
+
+      {isSubmitting ? (
+        <p role="status" className={sendingClass}>
+          Sending your order to the temple…
         </p>
       ) : null}
 
