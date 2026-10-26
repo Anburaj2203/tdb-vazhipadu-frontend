@@ -8,6 +8,7 @@ export type AsyncResource<TData> = {
   data: TData | null
   errorMessage: string
   reload: () => void
+  replaceData: (update: (current: TData) => TData) => void
 }
 
 type SettledRequest<TData> = {
@@ -54,10 +55,20 @@ export function useAsyncResource<TData>(load: () => Promise<TData>): AsyncResour
     setAttempt((previous) => previous + 1)
   }, [])
 
+  const replaceData = useCallback((update: (current: TData) => TData) => {
+    setSettled((current) => {
+      if (current === null || current.data === null) {
+        return current
+      }
+
+      return { ...current, data: update(current.data) }
+    })
+  }, [])
+
   const isSettled = settled !== null && settled.load === load && settled.attempt === attempt
 
   if (!isSettled) {
-    return { status: 'loading', data: null, errorMessage: '', reload }
+    return { status: 'loading', data: null, errorMessage: '', reload, replaceData }
   }
 
   return {
@@ -65,5 +76,6 @@ export function useAsyncResource<TData>(load: () => Promise<TData>): AsyncResour
     data: settled.data,
     errorMessage: settled.errorMessage,
     reload,
+    replaceData,
   }
 }

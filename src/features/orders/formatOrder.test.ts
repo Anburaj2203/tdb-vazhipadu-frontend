@@ -1,9 +1,4 @@
-import {
-  describeItems,
-  formatPlacedAt,
-  formatPrice,
-  formatStatus,
-} from '@/features/orders/formatOrder'
+import { describeItems, formatPlacedAt, formatStatus } from '@/features/orders/formatOrder'
 import type { Order } from '@/api'
 
 const order: Order = {
@@ -21,13 +16,6 @@ const order: Order = {
   placedAt: '2026-02-16T06:00:00.000Z',
   updatedAt: '2026-02-16T06:00:00.000Z',
 }
-
-describe('formatPrice', () => {
-  it('formats rupees with the Indian grouping and no paise', () => {
-    expect(formatPrice(1250)).toBe('₹1,250')
-    expect(formatPrice(125000)).toBe('₹1,25,000')
-  })
-})
 
 describe('formatStatus', () => {
   it('gives each status a human label', () => {

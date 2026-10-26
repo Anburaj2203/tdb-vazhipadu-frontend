@@ -1,4 +1,5 @@
-import { describeItems, formatPlacedAt, formatPrice, formatStatus } from '@/features/orders/formatOrder'
+import { describeItems, formatPlacedAt, formatStatus } from '@/features/orders/formatOrder'
+import { formatPrice } from '@/lib/formatPrice'
 import type { Order, OrderStatus } from '@/api'
 
 type OrderRowProps = {

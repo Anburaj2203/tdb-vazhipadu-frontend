@@ -1,9 +1,9 @@
 import { useCallback, useId, useState } from 'react'
 import { getOfferings } from '@/api'
-import LoadFailure from '@/features/offerings/LoadFailure'
+import LoadFailure from '@/components/LoadFailure'
 import OfferingList from '@/features/offerings/OfferingList'
 import { filterOfferings } from '@/features/offerings/filterOfferings'
-import { useAsyncResource } from '@/features/offerings/useAsyncResource'
+import { useAsyncResource } from '@/lib/useAsyncResource'
 
 type TempleOfferingsProps = {
   templeId: string

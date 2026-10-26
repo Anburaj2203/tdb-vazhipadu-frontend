@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useSearchParams } from 'react-router'
 import { cancelOrder, isApiError } from '@/api'
+import LoadFailure from '@/components/LoadFailure'
 import CancelOrderDialog from '@/features/orders/CancelOrderDialog'
 import OrderFiltersBar from '@/features/orders/OrderFilters'
 import OrderList from '@/features/orders/OrderList'
@@ -114,18 +115,7 @@ function OrdersBrowser() {
       <div aria-live="polite">
         {result.state === 'loading' ? <p className="text-slate-600">Loading orders…</p> : null}
 
-        {result.state === 'error' ? (
-          <div role="alert" className="rounded border border-red-200 bg-red-50 px-4 py-3">
-            <p className="text-sm text-red-700">{result.message}</p>
-            <button
-              type="button"
-              onClick={reload}
-              className="mt-3 rounded border border-red-300 px-3 py-1 text-sm font-medium text-red-700 hover:bg-red-100"
-            >
-              Try again
-            </button>
-          </div>
-        ) : null}
+        {result.state === 'error' ? <LoadFailure message={result.message} onRetry={reload} /> : null}
 
         {result.state === 'ready' && result.page.items.length === 0 ? (
           <p className="rounded border border-slate-200 bg-white px-4 py-6 text-center text-slate-600">

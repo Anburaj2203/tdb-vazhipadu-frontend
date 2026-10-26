@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react'
-import { formatPrice } from '@/features/orders/formatOrder'
+import { formatPrice } from '@/lib/formatPrice'
 import type { Order } from '@/api'
 
 type CancelOrderDialogProps = {

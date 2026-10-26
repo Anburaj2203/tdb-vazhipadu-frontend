@@ -1,11 +1,5 @@
 import type { Order, OrderItem, OrderStatus } from '@/api'
 
-const priceFormatter = new Intl.NumberFormat('en-IN', {
-  style: 'currency',
-  currency: 'INR',
-  maximumFractionDigits: 0,
-})
-
 const dateFormatter = new Intl.DateTimeFormat('en-IN', {
   day: '2-digit',
   month: 'short',
@@ -17,10 +11,6 @@ const STATUS_LABELS: Record<OrderStatus, string> = {
   confirmed: 'Confirmed',
   completed: 'Completed',
   cancelled: 'Cancelled',
-}
-
-export function formatPrice(amount: number): string {
-  return priceFormatter.format(amount)
 }
 
 export function formatPlacedAt(placedAt: string): string {
