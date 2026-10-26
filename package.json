@@ -9,9 +9,9 @@
     "preview": "vite preview",
     "lint": "oxlint",
     "typecheck": "tsc -b --noEmit",
-    "test": "jest",
-    "test:watch": "jest --watch",
-    "test:coverage": "jest --coverage"
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
+    "test:watch": "npm test -- --watch",
+    "test:coverage": "npm test -- --coverage"
   },
   "dependencies": {
     "react": "^19.3.1",
