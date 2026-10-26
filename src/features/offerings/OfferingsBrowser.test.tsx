@@ -1,14 +1,17 @@
-import { render, screen } from '@testing-library/react'
+import { render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { configureMockApi, resetDatabase, resetMockApiConfig } from '@/api'
+import { MemoryRouter } from 'react-router'
 import CartProvider from '@/features/cart/CartProvider'
 import OfferingsBrowser from '@/features/offerings/OfferingsBrowser'
 
 function renderBrowser() {
   return render(
-    <CartProvider>
-      <OfferingsBrowser />
-    </CartProvider>,
+    <MemoryRouter>
+      <CartProvider>
+        <OfferingsBrowser />
+      </CartProvider>
+    </MemoryRouter>,
   )
 }
 
@@ -45,5 +48,35 @@ describe('OfferingsBrowser', () => {
     await user.click(screen.getByRole('button', { name: 'Try again' }))
 
     expect(await screen.findByLabelText('Temple')).toBeInTheDocument()
+  })
+
+  it('confirms in the page which offering went into the cart', async () => {
+    const user = userEvent.setup()
+    renderBrowser()
+
+    const firstCard = (await screen.findAllByRole('listitem'))[0]
+    const offeringName = within(firstCard).getByRole('heading').textContent ?? ''
+
+    expect(screen.queryByText(/is in your cart/)).not.toBeInTheDocument()
+
+    await user.click(within(firstCard).getByRole('button', { name: 'Add to cart' }))
+
+    expect(screen.getByText(`${offeringName} is in your cart.`)).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: 'Go to the cart' })).toHaveAttribute('href', '/cart')
+  })
+
+  it('drops the confirmation when the devotee switches temple', async () => {
+    const user = userEvent.setup()
+    renderBrowser()
+
+    const firstCard = (await screen.findAllByRole('listitem'))[0]
+    await user.click(within(firstCard).getByRole('button', { name: 'Add to cart' }))
+    expect(screen.getByText(/is in your cart/)).toBeInTheDocument()
+
+    const templeField = screen.getByLabelText('Temple')
+    const options = within(templeField).getAllByRole('option')
+    await user.selectOptions(templeField, options[options.length - 1].getAttribute('value') ?? '')
+
+    expect(screen.queryByText(/is in your cart/)).not.toBeInTheDocument()
   })
 })
