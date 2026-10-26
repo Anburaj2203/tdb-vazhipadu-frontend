@@ -279,4 +279,27 @@ describe('OrderForm', () => {
 
     expect(screen.getByLabelText('Birth star')).toHaveFocus()
   })
+
+  it('has the error wiring in place on the field at the moment focus arrives', async () => {
+    const user = userEvent.setup()
+    renderWithRouter(<Cart />, '/cart')
+
+    const seenOnFocus: { invalid: string | null; describedBy: string | null }[] = []
+    const record = (event: FocusEvent) => {
+      const target = event.target as HTMLElement
+      seenOnFocus.push({
+        invalid: target.getAttribute('aria-invalid'),
+        describedBy: target.getAttribute('aria-describedby'),
+      })
+    }
+
+    document.addEventListener('focusin', record)
+    await user.click(screen.getByRole('button', { name: 'Place the order' }))
+    document.removeEventListener('focusin', record)
+
+    expect(seenOnFocus.at(-1)).toEqual({
+      invalid: 'true',
+      describedBy: expect.stringContaining('-error'),
+    })
+  })
 })

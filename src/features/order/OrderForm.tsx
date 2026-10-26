@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useId, useRef, useState } from 'react'
+import { flushSync } from 'react-dom'
 import { createOrder, isApiError, NAKSHATRAS, todayIsoDate } from '@/api'
 import type { Order } from '@/api'
 import { cartTempleIds } from '@/features/cart/cartTotal'
@@ -21,7 +22,7 @@ const FIELD_ORDER: readonly (keyof OrderFormValues)[] = [
   'birthStar',
   'offeringDate',
 ] as const
-const fieldClass = 'rounded-md border border-line-strong bg-white px-3 py-2 text-slate-900'
+const fieldClass = 'rounded-md border border-line-strong bg-surface-raised px-3 py-2 text-ink'
 const errorClass = 'text-sm text-rose-700'
 const sendingClass = 'text-sm text-slate-700'
 
@@ -67,7 +68,7 @@ function OrderForm({ onPlaced }: OrderFormProps) {
     }
 
     const nextErrors = validateOrderForm(values)
-    setErrors(nextErrors)
+    flushSync(() => setErrors(nextErrors))
 
     const firstInvalidField = FIELD_ORDER.find((field) => nextErrors[field])
 
