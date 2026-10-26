@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useId, useRef, useState } from 'react'
 import { createOrder, isApiError, NAKSHATRAS, todayIsoDate } from '@/api'
+import type { Order } from '@/api'
 import { cartTempleIds } from '@/features/cart/cartTotal'
 import { useCart } from '@/features/cart/useCart'
 import { EMPTY_ORDER_FORM } from '@/features/order/orderFormValues'
@@ -9,7 +10,7 @@ import { validateOrderForm } from '@/features/order/validateOrderForm'
 type SubmitState = { status: 'idle' } | { status: 'submitting' } | { status: 'failed'; message: string }
 
 type OrderFormProps = {
-  onPlaced: (orderId: string) => void
+  onPlaced: (order: Order) => void
 }
 
 const SUBMIT_FAILED = 'Your order did not go through.'
@@ -79,7 +80,7 @@ function OrderForm({ onPlaced }: OrderFormProps) {
 
       setValues(EMPTY_ORDER_FORM)
       setSubmitState({ status: 'idle' })
-      onPlaced(order.id)
+      onPlaced(order)
       clearCart()
     } catch (error: unknown) {
       if (!mounted.current) {

@@ -10,7 +10,9 @@ import {
   resetMockApiConfig,
 } from '@/api'
 import { CART_STORAGE_KEY } from '@/features/cart/cartStorage'
+import { cartTotal } from '@/features/cart/cartTotal'
 import type { CartLine } from '@/features/cart/cartTypes'
+import { formatPrice } from '@/lib/formatPrice'
 import Cart from '@/routes/Cart'
 import { renderWithRouter } from '@/test/renderWithRouter'
 
@@ -178,6 +180,21 @@ describe('OrderForm', () => {
     expect(screen.getByRole('button', { name: 'Sending the order…' })).toBeDisabled()
 
     await screen.findByText(/has been sent to the temple/i)
+  })
+
+  it('confirms the order with its number and the total', async () => {
+    const user = userEvent.setup()
+    renderWithRouter(<Cart />, '/cart')
+
+    await fillValidForm(user, futureDate())
+    await user.click(placeOrderButton())
+
+    await screen.findByText(/has been sent to the temple/i)
+
+    const confirmation = screen.getByRole('status')
+
+    expect(confirmation).toHaveTextContent(/TDB-\d+/)
+    expect(confirmation).toHaveTextContent(formatPrice(cartTotal(seededLines)))
   })
 
   it('creates exactly one order when place the order is pressed twice in quick succession', async () => {
