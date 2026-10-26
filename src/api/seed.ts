@@ -89,6 +89,26 @@ const TEMPLE_SEEDS: TempleSeed[] = [
       { name: 'Ratha Alangaram', description: 'Decoration of the temple chariot.', price: 6500, active: false },
     ],
   },
+  {
+    temple: {
+      name: 'Sree Padmanabhaswamy Temple',
+      city: 'Thiruvananthapuram',
+      deity: 'Padmanabhaswamy',
+      opensAt: '03:30',
+      closesAt: '19:20',
+    },
+    offerings: [
+      { name: 'Pushpanjali', description: 'Flowers offered in your name and star.', price: 75 },
+      { name: 'Raktha Pushpanjali', description: 'Pushpanjali with red flowers for prosperity.', price: 160 },
+      { name: 'Swayamvara Pushpanjali', description: 'Pushpanjali sought for an auspicious marriage.', price: 300 },
+      { name: 'Payasam Nivedyam', description: 'Sweet offering prepared in the temple kitchen.', price: 240 },
+      { name: 'Thulabharam', description: 'Offering weighed against the devotee.', price: 5000 },
+      { name: 'Neyyvilakku', description: 'Ghee lamp lit before the sanctum.', price: 90 },
+      { name: 'Udayasthamana Pooja', description: 'Services sponsored from sunrise to sunset.', price: 12000 },
+      { name: 'Ksheeradhara', description: 'Continuous stream of milk poured over the deity.', price: 1400 },
+      { name: 'Chuttuvilakku', description: 'Lamps lit around the temple corridor.', price: 2600, active: false },
+    ],
+  },
 ]
 
 const DEVOTEE_FIRST_NAMES = [
