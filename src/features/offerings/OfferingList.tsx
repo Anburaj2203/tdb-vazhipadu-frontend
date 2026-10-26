@@ -3,9 +3,10 @@ import OfferingCard from '@/features/offerings/OfferingCard'
 
 type OfferingListProps = {
   offerings: Offering[]
+  onAdd: (offering: Offering) => void
 }
 
-function OfferingList({ offerings }: OfferingListProps) {
+function OfferingList({ offerings, onAdd }: OfferingListProps) {
   if (offerings.length === 0) {
     return <p className="text-slate-600">No offerings match your search.</p>
   }
@@ -13,7 +14,7 @@ function OfferingList({ offerings }: OfferingListProps) {
   return (
     <ul className="flex flex-col gap-3">
       {offerings.map((offering) => (
-        <OfferingCard key={offering.id} offering={offering} />
+        <OfferingCard key={offering.id} offering={offering} onAdd={onAdd} />
       ))}
     </ul>
   )

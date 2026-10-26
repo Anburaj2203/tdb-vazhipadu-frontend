@@ -1,5 +1,6 @@
 import { useCallback, useId, useState } from 'react'
 import { getOfferings } from '@/api'
+import type { Offering } from '@/api'
 import LoadFailure from '@/features/offerings/LoadFailure'
 import OfferingList from '@/features/offerings/OfferingList'
 import { filterOfferings } from '@/features/offerings/filterOfferings'
@@ -7,9 +8,10 @@ import { useAsyncResource } from '@/features/offerings/useAsyncResource'
 
 type TempleOfferingsProps = {
   templeId: string
+  onAdd: (offering: Offering) => void
 }
 
-function TempleOfferings({ templeId }: TempleOfferingsProps) {
+function TempleOfferings({ templeId, onAdd }: TempleOfferingsProps) {
   const [query, setQuery] = useState('')
   const searchFieldId = useId()
   const loadOfferings = useCallback(() => getOfferings(templeId), [templeId])
@@ -42,7 +44,7 @@ function TempleOfferings({ templeId }: TempleOfferingsProps) {
           className="rounded-md border border-slate-300 bg-white px-3 py-2 text-slate-900"
         />
       </div>
-      <OfferingList offerings={filterOfferings(data ?? [], query)} />
+      <OfferingList offerings={filterOfferings(data ?? [], query)} onAdd={onAdd} />
     </div>
   )
 }
