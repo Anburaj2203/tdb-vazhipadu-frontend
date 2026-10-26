@@ -8,8 +8,10 @@ import {
   getOrders,
   getTemples,
   isApiError,
+  NAKSHATRAS,
   resetDatabase,
   resetMockApiConfig,
+  todayIsoDate,
 } from '@/api'
 import type { CreateOrderRequest, Order } from '@/api'
 
@@ -32,6 +34,8 @@ async function captureError(call: Promise<unknown>): Promise<ApiError> {
   throw new Error('Expected the call to reject')
 }
 
+const FUTURE_OFFERING_DATE = '2099-01-15'
+
 async function placeOrder(overrides: Partial<CreateOrderRequest> = {}): Promise<Order> {
   const offerings = await getOfferings('temple-1')
 
@@ -39,6 +43,8 @@ async function placeOrder(overrides: Partial<CreateOrderRequest> = {}): Promise<
     templeId: 'temple-1',
     devoteeName: 'Lakshmi Iyer',
     devoteePhone: '+91 9876543210',
+    birthStar: 'Rohini',
+    offeringDate: FUTURE_OFFERING_DATE,
     items: [{ offeringId: offerings[0].id, quantity: 2 }],
     ...overrides,
   })
@@ -125,6 +131,8 @@ describe('mock api network behaviour', () => {
         templeId: 'temple-1',
         devoteeName: 'Lakshmi Iyer',
         devoteePhone: '+91 9876543210',
+        birthStar: 'Rohini',
+        offeringDate: FUTURE_OFFERING_DATE,
         items: [{ offeringId: offerings[0].id, quantity: 2 }],
       }),
     )
@@ -201,6 +209,8 @@ describe('createOrder', () => {
       templeId: 'temple-1',
       devoteeName: 'Karthik Raghavan',
       devoteePhone: '+91 9000000001',
+      birthStar: 'Rohini',
+      offeringDate: FUTURE_OFFERING_DATE,
       items: [
         { offeringId: offerings[0].id, quantity: 2 },
         { offeringId: offerings[1].id, quantity: 1 },
@@ -224,6 +234,8 @@ describe('createOrder', () => {
       templeId: 'temple-1',
       devoteeName: 'Priya Natarajan',
       devoteePhone: '+91 9000000002',
+      birthStar: 'Rohini',
+      offeringDate: FUTURE_OFFERING_DATE,
       items: [
         { offeringId: offerings[0].id, quantity: 1 },
         { offeringId: offerings[0].id, quantity: 3 },
@@ -255,6 +267,58 @@ describe('createOrder', () => {
     instant()
 
     const error = await captureError(placeOrder({ devoteePhone: '   ' }))
+
+    expect(error.code).toBe('VALIDATION_ERROR')
+  })
+
+  it('stores the birth star and the offering date on the order', async () => {
+    instant()
+
+    const order = await placeOrder({ birthStar: 'Ashwini', offeringDate: FUTURE_OFFERING_DATE })
+
+    expect(order.birthStar).toBe('Ashwini')
+    expect(order.offeringDate).toBe(FUTURE_OFFERING_DATE)
+  })
+
+  it('rejects a birth star that is not one of the 27 nakshatras', async () => {
+    instant()
+
+    const error = await captureError(placeOrder({ birthStar: 'Betelgeuse' }))
+
+    expect(error.code).toBe('VALIDATION_ERROR')
+  })
+
+  it('accepts every one of the 27 nakshatras', async () => {
+    instant()
+
+    const stars = await Promise.all(
+      NAKSHATRAS.map((birthStar) => placeOrder({ birthStar }).then((order) => order.birthStar)),
+    )
+
+    expect(stars).toEqual([...NAKSHATRAS])
+  })
+
+  it('rejects an offering date that has already passed', async () => {
+    instant()
+
+    const error = await captureError(placeOrder({ offeringDate: '2020-03-04' }))
+
+    expect(error.code).toBe('VALIDATION_ERROR')
+    expect(error.message).toContain('has passed')
+  })
+
+  it('accepts an offering date of today', async () => {
+    instant()
+
+    const order = await placeOrder({ offeringDate: todayIsoDate() })
+
+    expect(order.offeringDate).toBe(todayIsoDate())
+  })
+
+  it('rejects an offering date that is not a real calendar date', async () => {
+    instant()
+
+    const error = await captureError(placeOrder({ offeringDate: '2099-02-31' }))
 
     expect(error.code).toBe('VALIDATION_ERROR')
   })

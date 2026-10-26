@@ -1,5 +1,7 @@
 import { createSeededRandom, pickOne, randomIntBetween } from '@/api/random'
 import type { Offering, Order, OrderItem, OrderStatus, Temple } from '@/api/types'
+import { NAKSHATRAS } from '@/api/nakshatras'
+import { toIsoDate } from '@/api/orderDate'
 
 export type MockDatabase = {
   temples: Temple[]
@@ -215,6 +217,8 @@ function buildOrders(temples: Temple[], offerings: Offering[], now: number): Ord
       templeName: temple.name,
       devoteeName: `${pickOne(random, DEVOTEE_FIRST_NAMES)} ${pickOne(random, DEVOTEE_LAST_NAMES)}`,
       devoteePhone: `+91 9${randomIntBetween(random, 10000000, 99999999)}`,
+      birthStar: pickOne(random, NAKSHATRAS),
+      offeringDate: toIsoDate(new Date(placedAt)),
       items,
       total: items.reduce((sum, item) => sum + item.subtotal, 0),
       status,
