@@ -16,6 +16,12 @@ const DEFAULT_PAGE_SIZE = 10
 const MAX_PAGE_SIZE = 100
 const CANCELLABLE_STATUSES: OrderStatus[] = ['pending', 'confirmed']
 
+function clampToRange(value: number | undefined, fallback: number, min: number, max: number): number {
+  const candidate = Number.isFinite(value) ? Math.trunc(Number(value)) : fallback
+
+  return Math.min(max, Math.max(min, candidate))
+}
+
 function delay(milliseconds: number): Promise<void> {
   return new Promise((resolve) => {
     setTimeout(resolve, milliseconds)
@@ -226,9 +232,9 @@ export async function getOrders(query: OrderQuery = {}): Promise<Page<Order>> {
     return (Date.parse(left.placedAt) - Date.parse(right.placedAt)) * sign
   })
 
-  const pageSize = Math.min(MAX_PAGE_SIZE, Math.max(1, Math.trunc(query.pageSize ?? DEFAULT_PAGE_SIZE)))
+  const pageSize = clampToRange(query.pageSize, DEFAULT_PAGE_SIZE, 1, MAX_PAGE_SIZE)
   const totalPages = Math.max(1, Math.ceil(sorted.length / pageSize))
-  const page = Math.min(totalPages, Math.max(1, Math.trunc(query.page ?? 1)))
+  const page = clampToRange(query.page, 1, 1, totalPages)
   const start = (page - 1) * pageSize
 
   return {

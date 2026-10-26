@@ -7,7 +7,6 @@ export function getDatabase(): MockDatabase {
   return database
 }
 
-export function resetDatabase(now?: number): MockDatabase {
+export function resetDatabase(now?: number): void {
   database = buildSeedData(now)
-  return database
 }
