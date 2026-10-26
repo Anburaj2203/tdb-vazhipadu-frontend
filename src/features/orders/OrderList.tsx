@@ -14,7 +14,7 @@ function OrderList({ orders, onCancel, cancellingOrderId }: OrderListProps) {
     <section
       aria-label="Orders"
       tabIndex={0}
-      className="overflow-x-auto rounded border border-slate-200 bg-white"
+      className="overflow-x-auto rounded border border-line bg-surface-raised"
     >
       <table className="w-full border-collapse">
         <caption className="sr-only">Orders</caption>

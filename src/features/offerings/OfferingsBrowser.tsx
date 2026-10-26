@@ -1,4 +1,5 @@
 import { useCallback, useId, useState } from 'react'
+import { Link } from 'react-router'
 import { getTemples } from '@/api'
 import type { Offering } from '@/api'
 import LoadFailure from '@/components/LoadFailure'
@@ -8,6 +9,7 @@ import { useAsyncResource } from '@/lib/useAsyncResource'
 
 function OfferingsBrowser() {
   const [chosenTempleId, setChosenTempleId] = useState('')
+  const [addedOfferingName, setAddedOfferingName] = useState('')
   const templeFieldId = useId()
   const loadTemples = useCallback(() => getTemples(), [])
   const { status, data, errorMessage, reload } = useAsyncResource(loadTemples)
@@ -26,6 +28,7 @@ function OfferingsBrowser() {
         name: offering.name,
         unitPrice: offering.price,
       })
+      setAddedOfferingName(offering.name)
     },
     [addOffering, selectedTempleName],
   )
@@ -55,8 +58,11 @@ function OfferingsBrowser() {
         <select
           id={templeFieldId}
           value={selectedTempleId}
-          onChange={(event) => setChosenTempleId(event.target.value)}
-          className="rounded-md border border-line-strong bg-white px-3 py-2 text-slate-900"
+          onChange={(event) => {
+            setChosenTempleId(event.target.value)
+            setAddedOfferingName('')
+          }}
+          className="rounded-md border border-line-strong bg-surface-raised px-3 py-2 text-ink"
         >
           {temples.map((temple) => (
             <option key={temple.id} value={temple.id}>
@@ -65,6 +71,14 @@ function OfferingsBrowser() {
           ))}
         </select>
       </div>
+      {addedOfferingName ? (
+        <p className="rounded-md border border-line bg-surface-raised px-3 py-2 text-sm text-ink">
+          {addedOfferingName} is in your cart.{' '}
+          <Link to="/cart" className="text-brand underline underline-offset-4">
+            Go to the cart
+          </Link>
+        </p>
+      ) : null}
       <TempleOfferings templeId={selectedTempleId} onAdd={handleAdd} />
     </div>
   )

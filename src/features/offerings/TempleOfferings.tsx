@@ -41,7 +41,7 @@ function TempleOfferings({ templeId, onAdd }: TempleOfferingsProps) {
           value={query}
           onChange={(event) => setQuery(event.target.value)}
           placeholder="Start typing an offering name"
-          className="rounded-md border border-line-strong bg-white px-3 py-2 text-slate-900"
+          className="rounded-md border border-line-strong bg-surface-raised px-3 py-2 text-ink"
         />
       </div>
       <OfferingList offerings={filterOfferings(data ?? [], query)} onAdd={onAdd} />
