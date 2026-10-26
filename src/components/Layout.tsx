@@ -18,9 +18,6 @@ function Layout() {
       </a>
       <header className="border-b border-line bg-surface-raised">
         <nav aria-label="Main" className="mx-auto flex max-w-3xl flex-wrap gap-x-6 gap-y-2 px-4 py-4 sm:px-6">
-          <NavLink to="/" end className={linkClass}>
-            Home
-          </NavLink>
           <NavLink to="/offerings" className={linkClass}>
             Offerings
           </NavLink>
@@ -29,9 +26,6 @@ function Layout() {
           </NavLink>
           <NavLink to="/orders" className={linkClass}>
             Orders
-          </NavLink>
-          <NavLink to="/about" className={linkClass}>
-            About
           </NavLink>
         </nav>
       </header>

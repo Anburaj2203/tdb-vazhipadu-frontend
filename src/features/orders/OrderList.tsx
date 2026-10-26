@@ -11,8 +11,7 @@ const headerClass = 'px-4 py-3 text-left text-xs font-semibold uppercase trackin
 
 function OrderList({ orders, onCancel, cancellingOrderId }: OrderListProps) {
   return (
-    <div
-      role="region"
+    <section
       aria-label="Orders"
       tabIndex={0}
       className="overflow-x-auto rounded border border-slate-200 bg-white"
@@ -52,7 +51,7 @@ function OrderList({ orders, onCancel, cancellingOrderId }: OrderListProps) {
           ))}
         </tbody>
       </table>
-    </div>
+    </section>
   )
 }
 
