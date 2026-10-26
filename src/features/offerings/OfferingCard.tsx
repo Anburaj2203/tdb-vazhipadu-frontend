@@ -9,7 +9,7 @@ type OfferingCardProps = {
 function OfferingCard({ offering, onAdd }: OfferingCardProps) {
   return (
     <li className="flex items-start justify-between gap-4 rounded-lg border border-slate-200 bg-white p-4">
-      <div>
+      <div className="min-w-0">
         <h3 className="font-semibold text-slate-900">{offering.name}</h3>
         <p className="mt-1 text-sm text-slate-600">{offering.description}</p>
       </div>

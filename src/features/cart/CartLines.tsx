@@ -14,11 +14,11 @@ function CartLines() {
             key={line.offeringId}
             className="flex flex-wrap items-center justify-between gap-4 rounded-lg border border-slate-200 bg-white p-4"
           >
-            <div className="min-w-40">
+            <div className="min-w-40 flex-1">
               <h3 className="font-semibold text-slate-900">{line.name}</h3>
               <p className="mt-1 text-sm text-slate-600">{formatPrice(line.unitPrice)} each</p>
             </div>
-            <div className="flex items-center gap-4">
+            <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
               <div className="flex items-center gap-2 text-sm text-slate-700">
                 <span aria-hidden="true">Quantity</span>
                 <input
