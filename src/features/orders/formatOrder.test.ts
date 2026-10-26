@@ -7,6 +7,8 @@ const order: Order = {
   templeName: 'Sree Padmanabhaswamy',
   devoteeName: 'Lakshmi Iyer',
   devoteePhone: '+91 98765432',
+  birthStar: 'Rohini',
+  offeringDate: '2026-02-17',
   items: [
     { offeringId: 'o1', name: 'Archana', unitPrice: 100, quantity: 2, subtotal: 200 },
     { offeringId: 'o2', name: 'Payasam', unitPrice: 150, quantity: 1, subtotal: 150 },

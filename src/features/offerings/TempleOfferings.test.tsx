@@ -15,6 +15,8 @@ async function keralaTempleId(): Promise<string> {
   return temple.id
 }
 
+function noop(): void {}
+
 describe('TempleOfferings', () => {
   let templeId = ''
 
@@ -30,13 +32,13 @@ describe('TempleOfferings', () => {
   })
 
   it('tells the devotee the offerings are loading before they arrive', () => {
-    render(<TempleOfferings templeId={templeId} />)
+    render(<TempleOfferings templeId={templeId} onAdd={noop} />)
 
     expect(screen.getByRole('status')).toHaveTextContent('Loading offerings')
   })
 
   it('lists the offerings with their prices once loaded', async () => {
-    render(<TempleOfferings templeId={templeId} />)
+    render(<TempleOfferings templeId={templeId} onAdd={noop} />)
 
     expect(await screen.findByRole('heading', { name: 'Pushpanjali' })).toBeInTheDocument()
     expect(screen.getByText('₹75')).toBeInTheDocument()
@@ -45,7 +47,7 @@ describe('TempleOfferings', () => {
 
   it('shows Pushpanjali and hides offerings that do not match when "push" is typed', async () => {
     const user = userEvent.setup()
-    render(<TempleOfferings templeId={templeId} />)
+    render(<TempleOfferings templeId={templeId} onAdd={noop} />)
     await screen.findByRole('heading', { name: 'Pushpanjali' })
 
     await user.type(screen.getByLabelText('Search offerings'), 'push')
@@ -58,7 +60,7 @@ describe('TempleOfferings', () => {
 
   it('matches any part of a name regardless of capitalisation', async () => {
     const user = userEvent.setup()
-    render(<TempleOfferings templeId={templeId} />)
+    render(<TempleOfferings templeId={templeId} onAdd={noop} />)
     await screen.findByRole('heading', { name: 'Pushpanjali' })
 
     await user.type(screen.getByLabelText('Search offerings'), 'ANJALI')
@@ -69,7 +71,7 @@ describe('TempleOfferings', () => {
 
   it('restores the full list when the search is cleared', async () => {
     const user = userEvent.setup()
-    render(<TempleOfferings templeId={templeId} />)
+    render(<TempleOfferings templeId={templeId} onAdd={noop} />)
     await screen.findByRole('heading', { name: 'Pushpanjali' })
     const searchField = screen.getByLabelText('Search offerings')
 
@@ -80,7 +82,7 @@ describe('TempleOfferings', () => {
   })
 
   it('never offers an inactive offering for booking', async () => {
-    render(<TempleOfferings templeId={templeId} />)
+    render(<TempleOfferings templeId={templeId} onAdd={noop} />)
     await screen.findByRole('heading', { name: 'Pushpanjali' })
 
     expect(screen.queryByRole('heading', { name: 'Chuttuvilakku' })).not.toBeInTheDocument()
@@ -88,7 +90,7 @@ describe('TempleOfferings', () => {
 
   it('says so when the search matches nothing', async () => {
     const user = userEvent.setup()
-    render(<TempleOfferings templeId={templeId} />)
+    render(<TempleOfferings templeId={templeId} onAdd={noop} />)
     await screen.findByRole('heading', { name: 'Pushpanjali' })
 
     await user.type(screen.getByLabelText('Search offerings'), 'helicopter')
@@ -99,7 +101,7 @@ describe('TempleOfferings', () => {
   it('shows an error with a way to try again when the load fails, and recovers on retry', async () => {
     const user = userEvent.setup()
     configureMockApi({ failureRate: 1 })
-    render(<TempleOfferings templeId={templeId} />)
+    render(<TempleOfferings templeId={templeId} onAdd={noop} />)
 
     const failure = await screen.findByRole('alert')
     expect(failure).toHaveTextContent('The temple service is unreachable. Please try again.')

@@ -1,3 +1,5 @@
+import type { Nakshatra } from '@/api/nakshatras'
+
 export type Temple = {
   id: string
   name: string
@@ -32,6 +34,8 @@ export type Order = {
   templeName: string
   devoteeName: string
   devoteePhone: string
+  birthStar: Nakshatra
+  offeringDate: string
   items: OrderItem[]
   total: number
   status: OrderStatus
@@ -48,6 +52,8 @@ export type CreateOrderRequest = {
   templeId: string
   devoteeName: string
   devoteePhone: string
+  birthStar: string
+  offeringDate: string
   items: CreateOrderLine[]
 }
 

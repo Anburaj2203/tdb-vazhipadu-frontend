@@ -1,6 +1,8 @@
 import { getMockApiConfig } from '@/api/config'
 import { getDatabase } from '@/api/db'
 import { ApiError } from '@/api/errors'
+import { isNakshatra } from '@/api/nakshatras'
+import { isIsoDate, isPastDate } from '@/api/orderDate'
 import type {
   CreateOrderRequest,
   Offering,
@@ -158,6 +160,22 @@ export async function createOrder(request: CreateOrderRequest): Promise<Order> {
     throw new ApiError('VALIDATION_ERROR', 'A contact number is required.', 422)
   }
 
+  const birthStar = request.birthStar.trim()
+
+  if (!isNakshatra(birthStar)) {
+    throw new ApiError('VALIDATION_ERROR', `"${birthStar}" is not one of the 27 nakshatras.`, 422)
+  }
+
+  const offeringDate = request.offeringDate.trim()
+
+  if (!isIsoDate(offeringDate)) {
+    throw new ApiError('VALIDATION_ERROR', 'An offering date in YYYY-MM-DD form is required.', 422)
+  }
+
+  if (isPastDate(offeringDate)) {
+    throw new ApiError('VALIDATION_ERROR', 'An offering cannot be booked for a day that has passed.', 422)
+  }
+
   if (request.items.length === 0) {
     throw new ApiError('VALIDATION_ERROR', 'An order needs at least one offering.', 422)
   }
@@ -173,6 +191,8 @@ export async function createOrder(request: CreateOrderRequest): Promise<Order> {
     templeName: temple.name,
     devoteeName,
     devoteePhone,
+    birthStar,
+    offeringDate,
     items,
     total: items.reduce((sum, item) => sum + item.subtotal, 0),
     status: 'pending',

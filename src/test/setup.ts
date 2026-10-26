@@ -9,3 +9,7 @@ Object.assign(globalThis, {
   TextDecoder: globalThis.TextDecoder ?? TextDecoder,
   crypto: globalThis.crypto ?? webcrypto,
 })
+
+beforeEach(() => {
+  window.localStorage.clear()
+})
