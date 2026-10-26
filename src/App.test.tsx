@@ -1,5 +1,6 @@
 import { screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+import { configureMockApi, resetDatabase, resetMockApiConfig } from '@/api'
 import App from '@/App'
 import { renderWithRouter } from '@/test/renderWithRouter'
 
@@ -29,6 +30,17 @@ describe('App routing', () => {
     await user.click(screen.getByRole('link', { name: 'About' }))
 
     expect(screen.getByRole('heading', { name: 'About' })).toBeInTheDocument()
+  })
+
+  it('renders the offerings route at /offerings', async () => {
+    resetDatabase()
+    configureMockApi({ minLatencyMs: 0, maxLatencyMs: 0, failureRate: 0 })
+    renderWithRouter(<App />, '/offerings')
+
+    expect(screen.getByRole('heading', { name: 'Offerings' })).toBeInTheDocument()
+    expect(await screen.findByLabelText('Temple')).toBeInTheDocument()
+
+    resetMockApiConfig()
   })
 
   it('marks the current nav link as active', () => {
