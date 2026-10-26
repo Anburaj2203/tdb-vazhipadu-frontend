@@ -114,16 +114,25 @@ describe('mock api network behaviour', () => {
     await expect(Promise.all([getTemples(), getTemples(), getTemples()])).resolves.toHaveLength(3)
   })
 
-  it('leaves the store untouched when a call fails', async () => {
+  it('leaves the store untouched when createOrder itself fails', async () => {
     instant()
+    const offerings = await getOfferings('temple-1')
     const before = await getOrders({ pageSize: 1 })
 
     configureMockApi({ failureRate: 1 })
-    await captureError(placeOrder())
+    const error = await captureError(
+      createOrder({
+        templeId: 'temple-1',
+        devoteeName: 'Lakshmi Iyer',
+        devoteePhone: '+91 9876543210',
+        items: [{ offeringId: offerings[0].id, quantity: 2 }],
+      }),
+    )
 
     instant()
     const after = await getOrders({ pageSize: 1 })
 
+    expect(error.code).toBe('NETWORK_ERROR')
     expect(after.total).toBe(before.total)
   })
 })
@@ -242,6 +251,14 @@ describe('createOrder', () => {
     expect(error.code).toBe('VALIDATION_ERROR')
   })
 
+  it('rejects a blank contact number', async () => {
+    instant()
+
+    const error = await captureError(placeOrder({ devoteePhone: '   ' }))
+
+    expect(error.code).toBe('VALIDATION_ERROR')
+  })
+
   it('rejects an offering that belongs to another temple', async () => {
     instant()
     const otherTempleOfferings = await getOfferings('temple-2')
@@ -321,6 +338,28 @@ describe('getOrders', () => {
     expect(first.totalPages).toBe(Math.ceil(first.total / 20))
     expect(second.page).toBe(2)
     expect(ids.size).toBe(first.items.length + second.items.length)
+  })
+
+  it('falls back to the first page and the default size when they are not numbers', async () => {
+    instant()
+
+    const page = await getOrders({ page: Number('abc'), pageSize: Number('xyz') })
+
+    expect(page.page).toBe(1)
+    expect(page.pageSize).toBe(10)
+    expect(page.items).toHaveLength(10)
+    expect(page.totalPages).toBe(Math.ceil(page.total / 10))
+  })
+
+  it('filters out orders placed after the placedTo bound', async () => {
+    instant()
+    const cutoff = new Date(FIXED_NOW - 30 * 24 * 60 * 60 * 1000).toISOString()
+
+    const page = await getOrders({ placedTo: cutoff, pageSize: 100 })
+
+    expect(page.items.length).toBeGreaterThan(0)
+    expect(page.items.every((order) => order.placedAt <= cutoff)).toBe(true)
+    expect(page.total).toBeLessThan(52)
   })
 
   it('clamps a page beyond the end back to the last page', async () => {
@@ -434,6 +473,10 @@ describe('cancelOrder', () => {
 })
 
 describe('resetDatabase', () => {
+  it('hands back nothing, so the store cannot be reached and mutated', () => {
+    expect(resetDatabase(FIXED_NOW)).toBeUndefined()
+  })
+
   it('restores the seeded orders after a change', async () => {
     instant()
     const before = await getOrders()
